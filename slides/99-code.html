@@ -1,13 +1,93 @@
 <section>
 	
-	<h3>Le code</h3>
+	<h3>code</h3>
 	
-	<p>
-		<small>
-            <pre><code data-trim data-noescape>
-                $ ./bin/console make:entity
-                  </code></pre>
-        </small>
-	</p>
+	
+  <section>
+    <pre><code data-trim data-noescape>
+    /**
+      * Add a blacklist record
+      *
+      * @param string $host
+      * @return Blacklist
+      */
+     public function add(string $host):Blacklist
+     {
+         // Make sure host is not in list
+         $found=$this->findOneBy(['host'=>$host]);
+         
+         if ($found) {
+             return $found;
+         }
+ 
+         $blacklist=new Blacklist();
+         $blacklist->setHost($host);
+         $this->save($blacklist, true);
+         return $blacklist;
+     }
+    </code></pre>
+  </section>
+
+  <section>
+    <pre><code data-trim data-noescape>
+      public function delete(Blacklist $entity): void
+      {
+          $entityManager = $this->getEntityManager();
+          $entityManager->remove($entity);
+          $entityManager->flush();
+      }
+    </code></pre>
+  </section>
+
+  <section>
+    <pre><code data-trim data-noescape>
+      public function isBlacklisted(string $url): bool
+      {
+          $parse=parse_url($url);
+          if(!$parse)return false;
+          $host=$parse['host'];
+          $found=$this->findOneBy(['host'=>$host]);
+  
+          if ($found) {
+              return true;
+          }
+  
+          return false;
+      }
+    </code></pre>
+  </section>
+
+  <section>
+    <pre><code data-trim data-noescape>
+    /**
+     * Get YT Video data from a given URL
+     *
+     * @param string $url
+     * @return array
+     */
+    private function fetchSnippet(string $url): array
+    {
+
+        if (!$this->api_key) {
+            throw new Exception("No Youtube API Key",1);
+        }
+
+        $videoId = $this->url2key($url);
+
+        if (!$videoId) {
+            return [];
+        }
+
+        $apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=$videoId&key=" . $this->api_key;
+
+        $response = file_get_contents($apiUrl);
+        $data = json_decode($response, true);
+        if ($data['items'] && count($data['items']) > 0) { //Got VIDEO
+            return $data['items'][0]['snippet'];
+        }
+        return [];
+    }
+    </code></pre>
+  </section>
 
 </section>
