@@ -1,13 +1,35 @@
 <section>
 	
-	<h3>PWA</h3>
+	<h3>Progressive Web App</h3>
+
 
     <section>
-        <img src="img/pwa-manifest.png">
+        manifest.json
+        <pre><code data-trim data-noescape>
+    {
+        "manifest_version": 2,
+        "name": "Yazoo!",
+        "short_name": "Yazoo",
+        "description": "Moteur de recherche incongru",
+        "start_url": ".",
+        "scope": ".",
+        "display": "standalone",
+        "theme_color": "#000000",
+        "background_color": "#2F2E39",
+        "icons": [
+        {
+            "src": "./img/icon-256.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        }
+        ]
+    }</code></pre>
     </section>
 
-    <section>
-        <img src="img/pwa-lighthouse.png">
-    </section>
+<section>
+    Lighthouse report:
+    <img src="img/pwa-lighthouse.png">
+</section>
+    
 
 </section>
