@@ -4,14 +4,14 @@
 	
 	
   <section>
-    <pre><code data-trim data-noescape>
+    <pre><code data-trim data-noescape class="hljs php">
     /**
       * Add a blacklist record
       *
       * @param string $host
       * @return Blacklist
       */
-     public function add(string $host):Blacklist
+     public function add(string $host): Blacklist
      {
          // Make sure host is not in list
          $found=$this->findOneBy(['host'=>$host]);
@@ -29,7 +29,7 @@
   </section>
 
   <section>
-    <pre><code data-trim data-noescape>
+    <pre><code data-trim data-noescape class="hljs php">
       public function delete(Blacklist $entity): void
       {
           $entityManager = $this->getEntityManager();
@@ -40,7 +40,7 @@
   </section>
 
   <section>
-    <pre><code data-trim data-noescape>
+    <pre><code data-trim data-noescape class="hljs php">
       public function isBlacklisted(string $url): bool
       {
           $parse=parse_url($url);
@@ -58,7 +58,7 @@
   </section>
 
   <section>
-    <pre><code data-trim data-noescape>
+    <pre><code data-trim data-noescape class="hljs php">
     /**
      * Get YT Video data from a given URL
      *
@@ -88,6 +88,22 @@
         return [];
     }
     </code></pre>
+  </section>
+
+
+  <section>
+    Doctrine createQueryBuilder:
+    <pre><code data-trim data-noescape class="hljs php">
+    //(example)
+    public function findImages(): array
+    {
+       return $this->createQueryBuilder('l')
+          ->andWhere('l.status > 0')
+          ->andWhere('l.mimetype LIKE :mimetype')
+          ->setParameter('mimetype', 'image%')
+          ->getQuery()
+          ->getResult();
+    }</code></pre>
   </section>
 
 </section>
