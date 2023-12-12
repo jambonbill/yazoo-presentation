@@ -2,7 +2,67 @@
 	
 	<h3>code</h3>
 	
+  <section><pre><code data-trim data-noescape class="hljs php">
+    /**
+     * Authenticate and return Directus API TOKEN
+     *
+     * @return string TOKEN
+     */
+    public function authenticate():string
+    {
+        $endpoint = "https://data.constructions-incongrues.net/musiques-incongrues/auth/authenticate";
+
+        if (!isset($this->directus_email)) {
+            throw new Exception("no directus_email. check env", 1);
+        }
+
+        if (!isset($this->directus_password)) {
+            throw new Exception("no directus_password. check env", 1);
+        }
+
+        $response = $this->httpClient->request(
+            'POST',
+            $endpoint,
+            [
+                'json' => [
+                'email'    => $this->directus_email,
+                'password' => $this->directus_password
+            ]]
+        );
+
+        if (isset($response->toArray()['data']['token'])) {
+            $this->token = $response->toArray()['data']['token'];
+        } else {
+            $this->token = '';
+        }
+        return $this->token;
+    }
+  </code></pre>
+    </section>
 	
+    <section>
+      <pre><code data-trim data-noescape class="hljs php">
+   /**
+    * Return new MI comments since Yazoo last inserted link.
+    * note: As a consequence, if new comments do not contain links, the lastCommentId wont be updated.
+    * @return array
+    */
+   public function fetchComments(): array
+   {
+
+       if (!$this->token) {
+           throw new Exception("no token", 1);
+       }
+
+       $lastCommentID=$this->linkRepository->findHighestCommentId();
+       $endpoint = "https://data.constructions-incongrues.net/musiques-incongrues/items/LUM_Comment";
+       $endpoint.= "?sort=" . urlencode("CommentID");
+       $endpoint.= "&filter[CommentID][gt]=$lastCommentID";
+       return $this->fetch($endpoint);
+   }
+  </code></pre>
+</section>
+
   <section>
     <pre><code data-trim data-noescape class="hljs php">
     /**
